@@ -1,0 +1,30 @@
+
+#menu {
+    size: inherit;
+    z-index: 3;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#create {
+    z-index: 2;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#save {
+    z-index: 1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#help {
+    z-index: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+ 
