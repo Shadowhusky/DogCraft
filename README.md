@@ -1,6 +1,6 @@
 [Abandoned]
 
-online: git@github.com:Shadowhusky/MyWeb.git
+online: https://shadowhusky.github.io/MyWeb/
 
 2D mini game written in pure HTML.
 
