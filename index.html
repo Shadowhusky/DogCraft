@@ -1,0 +1,158 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+<link rel="stylesheet" type="text/css" href="Resources/Style/Canvas.css">
+
+<!--Local script for controlling objects in canvas.-->
+<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/animejs@3.0.1/lib/anime.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/createjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery"></script>
+<script src="Resources/Scripts/Hammer.js"></script>
+<script src="Resources/Scripts/MapIO.js"></script>
+<script src="Resources/Scripts/Background.js"></script>
+<script src="Resources/Scripts/Physics.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="Resources/Scripts/Chat.js"></script>
+
+<head>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-163862842-2"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-163862842-2');
+	</script>
+    <title>Husky's home</title>
+    <link rel="icon" href="Resources/Images/shadowhusky.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="Resources/Images/shadowhusky.ico" type="image/x-icon" />
+    <!--Canvas style sheet from local css.-->
+</head>
+
+<!--Disable context menu(Menu pop-up when mouse right click)-->
+<body oncontextmenu="return false;">
+<meta 
+    name='viewport' 
+    content='width=device-width, height=device-height,initial-scale=1.0, maximum-scale=1.0, user-scalable=0' 
+/>
+    <!--Tool blocks provide user different tools for gaming-->
+    <div>
+        <!--Game area is a block of area for main game-->
+        <div class="GamingArea" style="left: 0; top: 0;width: 100% ; height: 100%;">
+                <!--Canvascontainer contains two canvas, one for background one for character-->
+                <div id="canvasContainer" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%"></div>
+                <div class="joyStickContainer" style="position: absolute; visibility:hidden">
+                    <div class="container space-top">
+                        <div class="center-align">
+                            <canvas id="joystick" height="300" width="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div id="LoadingWindow" alt="Loading...">
+                <img id="loadingIcon_MainPage" src="Resources\Images\Loading.gif" onload = "loadingIconLoaded()">
+                <style>
+                    #loadingIcon_MainPage {
+                        visibility: hidden;
+                        top: 50%;
+                        left: 50%;
+                        width: 10%;
+                    }
+                </style>
+                <script>
+                        function loadingIconLoaded()
+                        {
+                            //Set loading icon to screen central
+                            $('#loadingIcon_MainPage').css("margin-top",($('#canvasContainer')[0].clientHeight-$('#loadingIcon_MainPage')[0].clientHeight)/2);
+                            if($('#LoadingWindow')[0].style.visibility != "hidden")
+                            {
+                                $('#loadingIcon_MainPage')[0].style.visibility="visible";
+                            }
+                            
+                        }
+                </script>
+        </div>
+        <div id="Help_Window" alt="Help" style="visibility: visible;position: absolute;"  onclick="closeHelpWindow()">
+            <img id="Help_Window_Image" src="Resources\Images\Help.png" style="transform: rotate(0deg);">
+            <style>
+                #Help_Window {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                } 
+                #Help_Window_Image {
+                    visibility: hidden;
+                    width: 100%;
+                    z-index: 2;
+                    position: absolute;
+                    background-color: rgba(0,0,0,0.5);
+                    height: 100%;
+                }
+            </style>
+        </div>
+        <div id="Alarm_RotateScreen" alt="Wierd Dog">
+            <p id="rotateScreenText"><b>Rotate the screen</b></p>
+            <img id="rotatescreen" src="Resources\Images\Character_Single.png">
+            <style>
+                #Alarm_RotateScreen {
+                    position: absolute;
+                    z-index: 1;
+                    background-color: rgba(135,206,235,1);
+                    width: 100%;
+                    height: 100%;
+                    visibility: hidden;
+                }
+                #rotatescreen {
+                    width: 20vw;
+                    height: 20vw;
+                    display: block;
+                    margin-left: auto;
+                    margin-right: auto;
+                    position: absolute;
+                }
+            </style>
+        </div>
+        <ul id="mapEditor">
+            <img id="loadingIcon_MapEditor" src="Resources\Images\Loading.gif">
+            <!--itemsIcon-->
+        </ul>
+        <div class="chatBox">
+                <textarea id="receiveBox" autocomplete="off" readonly="true"> </textarea>
+                <button id="deleteChatHistory" class="mdl-button mdl-js-button mdl-button--icon" onclick=deleteChatHistory()>
+                    <i id="deleteChatHistoryIcon" class="material-icons">delete_outline</i>
+                  </button>
+                <input id="sendBox" onkeydown=sendButton_Keydown() autocomplete="off" />
+                <button id="sendButton" onclick=send_clientMessage() class="mdl-button mdl-js-button mdl-button--icon">
+                        <i class="material-icons" id="sendButton_Icon">send</i>
+                </button>
+        </div>
+        <div class="Tool_blocks" style="visibility: hidden">
+            <!-- Button for showing more buttons -->
+            <button id="menu" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                <i class="material-icons">add</i>
+            </button>
+            <button id="create" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                <i class="material-icons">create</i>
+            </button>
+
+            <button id="save" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                <i class="material-icons">save</i>
+            </button>
+
+            <button id="help" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                <i class="material-icons">help</i>
+            </button>
+        </div>
+            <!-- Background Music -->
+            <!-- <embed src="Resources/Au dio/Background.m4a" autostart="true" loop="true" hidden="true"> -->
+    </div>
+</body>
+
+<script src="Resources/Scripts/Joystick.js"></script>
+<link rel="stylesheet" type="text/css" href="Resources/Style/Menu.css">
+<script src="Resources/Scripts/Menu.js"></script>
+<script src="Resources/Scripts/ScreenRotation.js"></script>
+<script src="Resources/Scripts/GamingCanvas.js"></script>
+
+
