@@ -543,7 +543,12 @@ function putBlock(id,x,y)
 function iniMap()
 {
     if(mapInitialized){return;}
-    var mapCache=localStorage.getItem("mapData");
+    let mapCache=null;
+    try {
+        mapCache=localStorage.getItem("mapData");
+    } catch(err) {
+        console.error(err);
+    }
     if(mapCache!=null)
     {
         map=JSON.parse(mapCache);
@@ -579,7 +584,11 @@ function loadMap(mapContent_Raw)
 
 function saveMap()
 {
-	localStorage.setItem("mapData",JSON.stringify(map));
+    try {
+        localStorage.setItem("mapData",JSON.stringify(map));
+    } catch(err) {
+        console.error(err);   
+    }
 }
 
 
