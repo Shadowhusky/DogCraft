@@ -189,7 +189,7 @@ function Initialize()
     
     startGame();
  
-    loadChatBox();
+    // loadChatBox();
     
     Resize();
 
