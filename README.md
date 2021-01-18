@@ -2,7 +2,7 @@
 
 online: https://shadowhusky.github.io/MyWeb/
 
-2D mini game written in pure HTML.
+2D mini game written in pure HTML & JS.
 
 It is developed the time I started to learn front-end(Pretty Ugly as a result).
 
