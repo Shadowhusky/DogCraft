@@ -1,6 +1,6 @@
 [Abandoned]
 
-online: https://shadowhusky.github.io/MyWeb/
+online: https://shadowhusky.github.io/DogCraft/
 
 2D mini game written in pure HTML & JS.
 
